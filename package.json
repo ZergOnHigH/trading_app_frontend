@@ -24,7 +24,6 @@
     "react-redux": "^9.2.0",
     "react-toastify": "^11.0.5",
     "tailwind-merge": "^3.2.0",
-    //"trading-app-frontend": "file:",
     "zod": "^3.24.4"
   },
   "devDependencies": {

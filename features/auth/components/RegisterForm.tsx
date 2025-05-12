@@ -1,4 +1,7 @@
+// 🔁 Tryb klienta (potrzebny, bo używamy hooków)
 "use client";
+
+// 📦 Importy komponentów i bibliotek
 import {
   Card,
   CardContent,
@@ -15,6 +18,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { useRegisterMutation } from "../authApi";
 
+// ✅ Walidacja danych formularza – Zod schema
 export const registerSchema = z.object({
   username: z
     .string()
@@ -34,31 +38,36 @@ export const registerSchema = z.object({
     }),
 });
 
+// 🧾 Typ danych formularza
 interface RegisterFormData {
   username: string;
   email: string;
   password: string;
 }
 
+// 🧠 Komponent formularza rejestracji
 const RegisterForm = () => {
-  const [createAccount, state] = useRegisterMutation();
+  const [createAccount, state] = useRegisterMutation(); 
+  // Hook do rejestracji – `createAccount` to funkcja, `state` zawiera np. isLoading
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    resolver: zodResolver(registerSchema),
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema), // Walidacja danych przez zodResolver
   });
 
+  // 🚀 Funkcja wysyłająca dane do backendu
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      await createAccount(data);
+      await createAccount(data); // Wysyłka danych rejestracyjnych
     } catch (error) {
       console.error("Registration failed:", error);
     }
   };
 
+  // 🖼️ JSX – UI formularza
   return (
     <Card>
       <CardHeader>
@@ -69,6 +78,8 @@ const RegisterForm = () => {
       </CardHeader>
       <CardContent className="space-y-2">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          
+          {/* 🧩 Pole: Nazwa użytkownika */}
           <div className="space-y-1">
             <Label htmlFor="name">Nazwa</Label>
             <Input
@@ -81,6 +92,8 @@ const RegisterForm = () => {
               <p className="text-sm text-red-500">{errors.username.message}</p>
             )}
           </div>
+
+          {/* 🧩 Pole: Email */}
           <div className="space-y-1">
             <Label htmlFor="email">E-mail</Label>
             <Input
@@ -93,6 +106,8 @@ const RegisterForm = () => {
               <p className="text-sm text-red-500">{errors.email.message}</p>
             )}
           </div>
+
+          {/* 🧩 Pole: Hasło */}
           <div className="space-y-1">
             <Label htmlFor="name">Hasło</Label>
             <Input
@@ -106,6 +121,7 @@ const RegisterForm = () => {
             )}
           </div>
 
+          {/* ✅ Przycisk do wysłania formularza */}
           <Button type="submit" className="w-full mt-4">
             {state.isLoading ? "Tworzenie konta..." : "Zarejestruj się"}
           </Button>
