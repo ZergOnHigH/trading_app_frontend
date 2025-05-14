@@ -1,5 +1,7 @@
 // 🔁 Tryb klienta (potrzebny, bo używamy hooków)
 "use client";
+import Field from "./Fields";
+import { registerSchema } from "../schema/registerSchema";
 
 // 📦 Importy komponentów i bibliotek
 import {
@@ -17,26 +19,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { useRegisterMutation } from "../authApi";
+import { registerForm } from "../Data/registerForm";
 
-// ✅ Walidacja danych formularza – Zod schema
-export const registerSchema = z.object({
-  username: z
-    .string()
-    .min(3, "Nazwa użytkownika musi mieć co najmniej 3 znaki"),
-  email: z.string().email("Nieprawidłowy adres e-mail"),
-  password: z
-    .string()
-    .min(8, "Hasło musi zawierać co najmniej 8 znaków.")
-    .refine((val) => /[A-Z]/.test(val), {
-      message: "Hasło musi zawierać przynajmniej jedną dużą literę.",
-    })
-    .refine((val) => /[0-9]/.test(val), {
-      message: "Hasło musi zawierać przynajmniej jedną cyfrę.",
-    })
-    .refine((val) => /[!@#$%^&*(),.?":{}|<>]/.test(val), {
-      message: "Hasło musi zawierać przynajmniej jeden znak specjalny.",
-    }),
-});
+
 
 // 🧾 Typ danych formularza
 interface RegisterFormData {
@@ -80,46 +65,9 @@ const RegisterForm = () => {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           
           {/* 🧩 Pole: Nazwa użytkownika */}
-          <div className="space-y-1">
-            <Label htmlFor="name">Nazwa</Label>
-            <Input
-              {...register("username")}
-              type="text"
-              id="name"
-              placeholder="Podaj swoją nazwę"
-            />
-            {errors.username && (
-              <p className="text-sm text-red-500">{errors.username.message}</p>
-            )}
-          </div>
-
-          {/* 🧩 Pole: Email */}
-          <div className="space-y-1">
-            <Label htmlFor="email">E-mail</Label>
-            <Input
-              {...register("email")}
-              type="email"
-              id="email"
-              placeholder="Podaj swój e-mail"
-            />
-            {errors.email && (
-              <p className="text-sm text-red-500">{errors.email.message}</p>
-            )}
-          </div>
-
-          {/* 🧩 Pole: Hasło */}
-          <div className="space-y-1">
-            <Label htmlFor="name">Hasło</Label>
-            <Input
-              {...register("password")}
-              type="password"
-              id="name"
-              placeholder="Podaj hasło"
-            />
-            {errors.password && (
-              <p className="text-sm text-red-500">{errors.password.message}</p>
-            )}
-          </div>
+        
+         {registerForm.map((field) => <Field errors={errors} register={register} key={field.id} {...field}/>)}  
+         
 
           {/* ✅ Przycisk do wysłania formularza */}
           <Button type="submit" className="w-full mt-4">

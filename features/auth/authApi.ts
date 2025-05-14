@@ -35,7 +35,20 @@ export const authApi = createApi({
 
   // Definiujemy dostępne mutacje, czyli zapytania typu POST/PUT/DELETE
   endpoints: (builder) => ({
+    
+    // 🔑 Mutacja aktywacji konta    
+       activate: builder.query({
+      query: (token: string) => "/auth/activate/" + token,
+      transformResponse: (res: AuthResponse) => {
+        toast.success(res.message);
 
+        return res;
+      },
+      transformErrorResponse: (res: AuthErrorResponse) => {
+        toast.error(res.data.message);
+        return res;
+      },
+    }),
     // 🔐 Mutacja logowania
     login: builder.mutation({
       query: (user) => {
@@ -47,7 +60,7 @@ export const authApi = createApi({
       },
       transformResponse: (res: AuthResponse) => {
         // Jeśli logowanie się powiedzie:
-        document.cookie = `access_token=${res.token}; path=/; max-age=3600`; 
+        document.cookie = `access_token=${res.data}; path=/; max-age=3600`; 
         // Zapisujemy token JWT w ciasteczku na 1 godzinę
         toast.success(res.message); // Pokazujemy użytkownikowi komunikat sukcesu
         return res; // Zwracamy odpowiedź
@@ -84,4 +97,4 @@ export const authApi = createApi({
 });
 
 // Eksportujemy hooki do użycia w komponentach React
-export const { useLoginMutation, useRegisterMutation } = authApi;
+export const { useLoginMutation, useRegisterMutation, useLazyActivateQuery } = authApi;

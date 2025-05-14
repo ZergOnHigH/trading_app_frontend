@@ -1,15 +1,21 @@
-import RegisterForm from "@/features/auth/components/RegisterForm"
-// Importuje komponent `RegisterForm` z podanej ścieżki – zapewne formularz rejestracji użytkownika.
-// Ścieżka ze znakiem `@` oznacza alias (skrót) do głównego katalogu projektu, co ułatwia zarządzanie ścieżkami w większych aplikacjach.
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import AuthForm from "@/features/auth/components/AuthForm";
 
 export default function AuthPage() {
-// Eksportuje domyślnie funkcję `AuthPage`, która jest komponentem React – reprezentuje stronę uwierzytelniania (auth).
-
   return (
     <div>
-        <RegisterForm/>
+      <Tabs defaultValue="login" className="w-[400px]">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="login">Logowanie</TabsTrigger>
+          <TabsTrigger value="register">Rejestracja</TabsTrigger>
+        </TabsList>
+        <TabsContent value="login">
+          <AuthForm mode="login"/>
+        </TabsContent>
+        <TabsContent value="register">
+          <AuthForm mode="register"/>
+        </TabsContent>
+      </Tabs>
     </div>
-  )
-  // Zwraca strukturę JSX – pojedynczy `div`, w którym znajduje się komponent `RegisterForm`.
-  // To oznacza, że na tej stronie będzie wyświetlany formularz rejestracji użytkownika.
+  );
 }
